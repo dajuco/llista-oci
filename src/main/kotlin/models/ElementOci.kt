@@ -6,7 +6,8 @@ data class ElementOci(
     var descripcion: String? = null,
     var estado: Int,
     val categoria: Categoria
-) {
+)
+{
     constructor(id: String, titulo: String, categoria: Categoria) : this(id, titulo, descripcion = null,1, categoria)
 
     fun AvanzarEstado() {
