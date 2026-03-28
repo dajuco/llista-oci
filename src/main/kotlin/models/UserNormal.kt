@@ -1,8 +1,14 @@
 package models
 
 class UserNormal(
-    user: String,
+    username: String,
     password: String,
-    display: String
-) : User(user, password, display) {
+    display: String,
+    val elementsUser: MutableList<ElementUsuari> = mutableListOf()
+) : User(username, password, display) {
+
+
+    fun crearElemento(elemento: ElementUsuari) {
+        elementsUser.add(elemento)
+    }
 }

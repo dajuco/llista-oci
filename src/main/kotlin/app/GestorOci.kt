@@ -1,4 +1,5 @@
 package app
+
 import models.*
 
 class GestorOci {
@@ -9,7 +10,10 @@ class GestorOci {
 
     val users: MutableList<User> = mutableListOf()
 
-    val root = UserSuperAdmin("admin", "1234", "Super User")
+    init {
+        val root = UserSuperAdmin("super", "1234", "Super User")
+        users.add(root)
+    }
 
     fun crearElemento(elemento: ElementOci) {
         elements.add(elemento)
@@ -21,9 +25,13 @@ class GestorOci {
         println("Categoria creada: $categoria")
     }
 
-    fun crearUser(user: User) {
-        users.add(user)
-        println("User creat: $user")
+    fun crearUser(username: String, password: String, display: String, admin: Boolean) {
+        if (admin) {
+            users.add(UserAdmin(username, password, display))
+        }
+        else {
+            users.add(UserNormal(username, password, display))
+        }
     }
 
 

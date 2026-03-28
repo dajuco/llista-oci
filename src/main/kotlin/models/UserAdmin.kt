@@ -1,8 +1,8 @@
 package models
 
 class UserAdmin (
-    user: String,
+    username: String,
     password: String,
     display: String
-) : User(user, password, display) {
+) : User(username, password, display) {
 }

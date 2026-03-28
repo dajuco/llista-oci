@@ -1,4 +1,7 @@
 package models
 
-open class User(user: String, password: String, display: String) {
+open class User(
+    val username: String,
+    val password: String,
+    val display: String) {
 }
