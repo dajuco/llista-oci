@@ -3,16 +3,13 @@ import models.*
 import utils.*
 import menus.*
 
-// Variable para controlar si cargamos datos de prueba automáticamente
 val MODO_DESARROLLO = true
 
 fun main() {
-    // Configurar la salida de la consola a UTF-8 para arreglar caracteres como la 'ñ' o tildes
     System.setOut(java.io.PrintStream(System.out, true, "UTF-8"))
 
     val gestor = GestorOci()
     
-    // Cargamos los datos de prueba si estamos en desarrollo
     if (MODO_DESARROLLO) {
         cargarDatosDePrueba(gestor)
     }

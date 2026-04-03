@@ -61,7 +61,6 @@ fun mostrarMisElementos(gestor: GestorOci, userlogged: UserNormal) {
         return
     }
     
-    // Operación sobre colección (map y filterNotNull implícito con find)
     userlogged.elementsUser.forEach { elemento ->
         val elementoOriginal = gestor.elements.find { it.id == elemento.elementOciId }
         if (elementoOriginal != null) {
@@ -89,7 +88,6 @@ fun añadirElemento(gestor: GestorOci, userlogged: UserNormal){
     println("\nEscribe qué elemento quieres guardar (introduce su ID):")
     val idElemento = readln()
     
-    // Validamos que el elemento exista en GestorOci
     val elementoOriginal = gestor.elements.find { it.id == idElemento }
     
     try {
@@ -97,7 +95,6 @@ fun añadirElemento(gestor: GestorOci, userlogged: UserNormal){
             throw ElementNoTrobatException("No s'ha trobat cap element amb l'ID '$idElemento'.")
         }
         
-        // Verificamos si ya lo tiene en su lista
         if (userlogged.elementsUser.any { it.elementOciId == idElemento }) {
             throw ElementDuplicatException("Aquest element ja està a la teva llista.")
         }
