@@ -1,42 +1,72 @@
 package menus
 
 import app.GestorOci
+import models.*
+import exceptions.*
 
 fun menuSuperAdmin(gestor: GestorOci) {
     var option: String?
-    do {
-        println("\n--- Panel de Super Administrador ---")
-        println("1. Crear usuario")
-        println("0. Salir")
-        print("Selecciona una opción: ")
-        option = readlnOrNull()
+     do {
+         println("\n--- Panell de Super Administrador ---")
+         println("1. Crear usuari")
+         println("2. Mostrar usuaris")
+         println("0. Sortir")
+         print("Selecciona una opció: ")
+         option = readlnOrNull()
 
-        when (option) {
-            "1" -> {
-                crearUser(gestor)
-            }
-            "0" -> println("Saliendo del panel...")
-            else -> println("Opción no válida.")
-        }
-    } while (option != "0")
+         when (option) {
+             "1" -> crearUser(gestor)
+             "2" -> mostrarUsuaris(gestor)
+             "0" -> println("Sortint del menú...")
+             else -> println("Opció no vàlida.")
+         }
+     } while (option != "0")
 }
 
 fun crearUser(gestor: GestorOci) {
 
-    println("--- Crear Nuevo Usuario ---")
-    print("Introduce el nombre de usuario: ")
-    val username = readln()
+    try {
+        println("--- Crear Nou Usuari ---")
+        print("Introdueix el nom d'usuari: ")
+        val username = readln().trim()
 
-    print("Introduce la contraseña: ")
-    val password = readln()
+            if (username.isBlank())
+                throw TextBuitException("El nom d'usuari no pot estar buit.")
+            if (gestor.users.any { it.username.equals(username, ignoreCase = true) })
+                throw ElementDuplicatException("El nom d'usuari '$username' ja existeix.")
 
-    print("Introduce el nombre a mostrar (display): ")
-    val display = readln()
+        print("Introdueix la contrasenya: ")
+        val password = readln().trim()
 
-    print("¿Es administrador? (s/n): ")
-    val isAdmin = readln().lowercase() == "s"
+            if (password.isBlank())
+                throw TextBuitException("La contrasenya no pot estar buida.")
+
+        print("Introdueix el nom a mostrar (display): ")
+        val display = readln().trim()
+
+            if (display.isBlank())
+                throw TextBuitException("El nom a mostrar (display) no pot estar buit.")
 
 
-    gestor.crearUser(username, password, display, isAdmin)
-    println("Usuario creado correctamente.")
+        print("¿És administrador? (s/n): ")
+        val isAdmin = readln().trim().lowercase() == "s"
+
+
+        gestor.crearUser(username, password, display, isAdmin)
+    } catch (e: TextBuitException) {
+        println(e.message)
+    } catch (e: ElementDuplicatException) {
+        println(e.message)
+    }
+}
+
+fun mostrarUsuaris(gestor: GestorOci) {
+
+    if (gestor.users.isEmpty()) {
+        println("No hi ha usuaris registrats.")
+    }
+    else {
+        println("Usuaris existents:")
+        gestor.users.forEach { println("- ${it.display} (username: ${it.username}) rol: ${if (it.username == "super") "Super" else if (it is UserAdmin) "Admin" else "User"}") }
+    }
 }

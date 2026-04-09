@@ -4,11 +4,11 @@ import models.*
 
 
 fun iniciarSesion(lista: List<User>): User? {
-    println("Iniciar Sesion")
-    println("Introduce el usuario")
+    println("Iniciar Sessió")
+    println("Introdueix l'usuari")
     val userReq = readlnOrNull()?.trim() ?: ""
 
-    println("Introduce la contraseña")
+    println("Introdueix la contrasenya")
     val passwReq = readlnOrNull()?.trim() ?: ""
 
     return lista.find { it.username == userReq && it.password == passwReq }
