@@ -1,4 +1,5 @@
 package menus
+
 import app.GestorOci
 import models.*
 import exceptions.*
@@ -53,7 +54,7 @@ fun crearElemento(gestor: GestorOci) {
             val descripcion = readln().trim()
 
             if (descripcion.isBlank())
-                throw ValidacioException("La descripción no puede estar vacía.")
+                throw ValidacioException("La descripció no pot estar buida.")
 
             println("Categories existents:")
 
@@ -79,26 +80,31 @@ fun crearElemento(gestor: GestorOci) {
         println("Error: ${e.message}")
     } catch (e: ElementNoTrobatException) {
         println("Error: ${e.message}")
+    } catch (e: Exception) {
+        println(e.message)
     }
 
  }
 
 fun crearCategoria(gestor: GestorOci) {
-     println("--- Crear Nova Categoria ---")
-     print("Introdueix el nom de la categoria: ")
-     val nombre = readln().trim()
-     if (nombre.isBlank()) {
-         println("Error: El nom de la categoria no pot estar buit.")
-         return
-     }
-     if (gestor.categories.any { it.nombre.equals(nombre, ignoreCase = true) }) {
-         println("Error: La categoria '$nombre' ja existeix.")
-         return
-     }
-     val categoria = Categoria(nombre)
-     try {
+    try {
+         println("--- Crear Nova Categoria ---")
+         print("Introdueix el nom de la categoria: ")
+         val nombre = readln().trim()
+         if (nombre.isBlank())
+             throw TextBuitException("El nom de la categoria no pot estar buit.")
+
+         if (gestor.categories.any { it.nombre.equals(nombre, ignoreCase = true) })
+             throw ElementDuplicatException("La categoria '$nombre' ja existeix.")
+
+         val categoria = Categoria(nombre)
+
          gestor.crearCategoria(categoria)
+     } catch (e: TextBuitException) {
+         println(e.message)
+     } catch (e: ElementDuplicatException) {
+         println(e.message)
      } catch (e: Exception) {
-         println("Error: ${e.message}")
+         println(e.message)
      }
 }

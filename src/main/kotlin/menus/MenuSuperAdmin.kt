@@ -57,16 +57,11 @@ fun crearUser(gestor: GestorOci) {
         println(e.message)
     } catch (e: ElementDuplicatException) {
         println(e.message)
+    } catch (e: Exception) {
+        println(e.message)
     }
 }
 
 fun mostrarUsuaris(gestor: GestorOci) {
-
-    if (gestor.users.isEmpty()) {
-        println("No hi ha usuaris registrats.")
-    }
-    else {
-        println("Usuaris existents:")
-        gestor.users.forEach { println("- ${it.display} (username: ${it.username}) rol: ${if (it.username == "super") "Super" else if (it is UserAdmin) "Admin" else "User"}") }
-    }
+    gestor.mostrarUsuariosFormateados()
 }

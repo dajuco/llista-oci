@@ -48,33 +48,15 @@ fun gestionarEstados(gestor: GestorOci, userlogged: UserNormal) {
 }
 
 fun mostrarElementos(gestor: GestorOci){
-     if (gestor.elements.isEmpty()) {
-         println("No hi ha elements registrats.")
-         return
-     }
-     println("Elements existents: ${gestor.elements.joinToString { it.titulo }}")
+    gestor.mostrarElementosFormateados()
 }
 
 fun mostrarMisElementos(gestor: GestorOci, userlogged: UserNormal) {
-     if (userlogged.elementsUser.isEmpty()) {
-         println("No tens elements a la teva llista.")
-         return
-     }
-
-     userlogged.elementsUser.forEach { elemento ->
-         val elementoOriginal = gestor.elements.find { it.id == elemento.elementOciId }
-         if (elementoOriginal != null) {
-             println("[${elemento.elementOciId}] ${elementoOriginal.titulo} - Estat: ${elemento.estado.descripcion}")
-         }
-     }
+    gestor.mostrarMisElementosFormateados(userlogged)
 }
 
 fun mostrarCategorias(gestor: GestorOci) {
-     if (gestor.categories.isEmpty()) {
-         println("No hi ha categories registrades.")
-         return
-     }
-     println("Categories existents: ${gestor.categories.joinToString { it.nombre }}")
+    gestor.mostrarCategoriasFormateadas()
 }
 
 fun añadirElemento(gestor: GestorOci, userlogged: UserNormal){
@@ -101,7 +83,7 @@ fun añadirElemento(gestor: GestorOci, userlogged: UserNormal){
             throw ElementDuplicatException("Aquest element ja està a la teva llista.")
 
 
-        val elemento = ElementUsuari(idElemento, estado = Estado.PENDIENTE)
+        val elemento = ElementUsuari(idElemento, estado = Estado.PENDENT)
         userlogged.crearElemento(elemento)
         println("Element '${elementoOriginal.titulo}' afegit correctament a la teva llista!")
 
@@ -110,6 +92,8 @@ fun añadirElemento(gestor: GestorOci, userlogged: UserNormal){
      } catch (e: ElementDuplicatException) {
          println(e.message)
      } catch (e: TextBuitException) {
+         println(e.message)
+     } catch (e: Exception) {
          println(e.message)
      }
 }
@@ -145,33 +129,43 @@ fun avanzarEstado(gestor: GestorOci, userlogged: UserNormal) {
          println("Error: ${e.message}")
      } catch (e: TextBuitException) {
          println("Error: ${e.message}")
+     } catch (e: Exception) {
+         println(e.message)
      }
 }
 
 fun retrocederEstado(gestor: GestorOci, userlogged: UserNormal) {
+    try {
      if (userlogged.elementsUser.isEmpty()) {
-         println("No tens elements per modificar l'estat.")
-         return
+         throw ElementNoTrobatException("No tens elements per modificar l'estat.")
      }
 
      println("Elements disponibles:")
      userlogged.elementsUser.forEach { elemento ->
          val elementoOriginal = gestor.elements.find { it.id == elemento.elementOciId }
-         if (elementoOriginal != null) {
-             println("[${elemento.elementOciId}] ${elementoOriginal.titulo} - Estat: ${elemento.estado.descripcion}")
-         }
+         if (elementoOriginal == null)
+             throw ElementNoTrobatException("L'element amb ID '${elemento.elementOciId}' no es troba a la teva llista.")
+
+         println("[${elemento.elementOciId}] ${elementoOriginal.titulo} - Estat: ${elemento.estado.descripcion}")
      }
 
      println("Selecciona un element (introdueix el seu ID):")
      val idElemento = readln().trim()
 
-     try {
+        if (idElemento.isBlank())
+            throw TextBuitException("L'ID de l'element no pot estar buit.")
+
+
          val elemento = userlogged.elementsUser.find { it.elementOciId == idElemento }
              ?: throw ElementNoTrobatException("L'element amb ID '$idElemento' no es troba a la teva llista.")
 
          elemento.RetrocederEstado()
-         println("Estat retrocedido a: ${elemento.estado.descripcion}")
+         println("Estat retrocedit a: ${elemento.estado.descripcion}")
      } catch (e: ElementNoTrobatException) {
          println("Error: ${e.message}")
+     } catch (e: TextBuitException) {
+         println("Error: ${e.message}")
+     } catch (e: Exception) {
+         println(e.message)
      }
 }
