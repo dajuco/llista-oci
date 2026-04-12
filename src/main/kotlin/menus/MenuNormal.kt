@@ -1,5 +1,6 @@
 package menus
-import app.GestorOci
+
+import app.*
 import models.*
 import exceptions.*
 
@@ -48,44 +49,32 @@ fun gestionarEstados(gestor: GestorOci, userlogged: UserNormal) {
 }
 
 fun mostrarElementos(gestor: GestorOci){
-    gestor.mostrarElementosFormateados()
+    gestor.mostrarElementos()
 }
 
 fun mostrarMisElementos(gestor: GestorOci, userlogged: UserNormal) {
-    gestor.mostrarMisElementosFormateados(userlogged)
+    gestor.mostrarMisElementos(userlogged)
 }
 
 fun mostrarCategorias(gestor: GestorOci) {
-    gestor.mostrarCategoriasFormateadas()
+    gestor.mostrarCategorias()
 }
 
 fun añadirElemento(gestor: GestorOci, userlogged: UserNormal){
     try {
-        if (gestor.elements.isEmpty()) {
+        if (!gestor.hayElementosDisponibles()) {
             println("No hi ha elements disponibles per afegir.")
             return
         }
         else {
-            println("Elements disponibles:\n${gestor.elements.joinToString("\n") { "[${it.id}] ${it.titulo}" }}")
+            mostrarElementos(gestor)
         }
 
         println("\nEscriu quin element vols guardar (introdueix el seu ID):")
         val idElemento = readln().trim()
 
-        if (idElemento.isBlank())
-            throw TextBuitException("L'ID de l'element no pot estar buit.")
-
-        val elementoOriginal = gestor.elements.find { it.id == idElemento }
-
-        if (elementoOriginal == null)
-            throw ElementNoTrobatException("No s'ha trobat cap element amb l'ID '$idElemento'.")
-        if (userlogged.elementsUser.any { it.elementOciId == idElemento })
-            throw ElementDuplicatException("Aquest element ja està a la teva llista.")
-
-
-        val elemento = ElementUsuari(idElemento, estado = Estado.PENDENT)
-        userlogged.crearElemento(elemento)
-        println("Element '${elementoOriginal.titulo}' afegit correctament a la teva llista!")
+        val titulo = gestor.añadirElementoAUsuario(userlogged, idElemento)
+        println("Element '$titulo' afegit correctament a la teva llista!")
 
      } catch (e: ElementNoTrobatException) {
          println(e.message)
@@ -100,18 +89,12 @@ fun añadirElemento(gestor: GestorOci, userlogged: UserNormal){
 
 fun avanzarEstado(gestor: GestorOci, userlogged: UserNormal) {
     try {
-     if (userlogged.elementsUser.isEmpty()) {
+     if (!gestor.usuarioTieneElementos(userlogged)) {
          throw ElementNoTrobatException("No tens elements per modificar l'estat.")
      }
 
      println("Elements disponibles:")
-     userlogged.elementsUser.forEach { elemento ->
-         val elementoOriginal = gestor.elements.find { it.id == elemento.elementOciId }
-         if (elementoOriginal == null)
-             throw ElementNoTrobatException("L'element amb ID '${elemento.elementOciId}' no es troba a la teva llista.")
-
-         println("[${elemento.elementOciId}] ${elementoOriginal.titulo} - Estat: ${elemento.estado.descripcion}")
-     }
+     gestor.mostrarMisElementos(userlogged)
 
      println("Selecciona un element (introdueix el seu ID):")
      val idElemento = readln().trim()
@@ -120,11 +103,8 @@ fun avanzarEstado(gestor: GestorOci, userlogged: UserNormal) {
             throw TextBuitException("L'ID de l'element no pot estar buit.")
 
 
-         val elemento = userlogged.elementsUser.find { it.elementOciId == idElemento }
-             ?: throw ElementNoTrobatException("L'element amb ID '$idElemento' no es troba a la teva llista.")
-
-         elemento.AvanzarEstado()
-         println("Estat avançat a: ${elemento.estado.descripcion}")
+        val nuevoEstado = gestor.avanzarEstadoElementoUsuario(userlogged, idElemento)
+        println("Estat avançat a: $nuevoEstado")
      } catch (e: ElementNoTrobatException) {
          println("Error: ${e.message}")
      } catch (e: TextBuitException) {
@@ -136,18 +116,12 @@ fun avanzarEstado(gestor: GestorOci, userlogged: UserNormal) {
 
 fun retrocederEstado(gestor: GestorOci, userlogged: UserNormal) {
     try {
-     if (userlogged.elementsUser.isEmpty()) {
+     if (!gestor.usuarioTieneElementos(userlogged)) {
          throw ElementNoTrobatException("No tens elements per modificar l'estat.")
      }
 
      println("Elements disponibles:")
-     userlogged.elementsUser.forEach { elemento ->
-         val elementoOriginal = gestor.elements.find { it.id == elemento.elementOciId }
-         if (elementoOriginal == null)
-             throw ElementNoTrobatException("L'element amb ID '${elemento.elementOciId}' no es troba a la teva llista.")
-
-         println("[${elemento.elementOciId}] ${elementoOriginal.titulo} - Estat: ${elemento.estado.descripcion}")
-     }
+        gestor.mostrarMisElementos(userlogged)
 
      println("Selecciona un element (introdueix el seu ID):")
      val idElemento = readln().trim()
@@ -156,11 +130,8 @@ fun retrocederEstado(gestor: GestorOci, userlogged: UserNormal) {
             throw TextBuitException("L'ID de l'element no pot estar buit.")
 
 
-         val elemento = userlogged.elementsUser.find { it.elementOciId == idElemento }
-             ?: throw ElementNoTrobatException("L'element amb ID '$idElemento' no es troba a la teva llista.")
-
-         elemento.RetrocederEstado()
-         println("Estat retrocedit a: ${elemento.estado.descripcion}")
+        val nuevoEstado = gestor.retrocederEstadoElementoUsuario(userlogged, idElemento)
+        println("Estat retrocedit a: $nuevoEstado")
      } catch (e: ElementNoTrobatException) {
          println("Error: ${e.message}")
      } catch (e: TextBuitException) {

@@ -1,0 +1,109 @@
+[
+    {
+        "type": "models.UserSuperAdmin",
+        "username": "super",
+        "password": "1234",
+        "display": "Super Usuari"
+    },
+    {
+        "type": "models.UserAdmin",
+        "username": "admin",
+        "password": "1234",
+        "display": "Administrador"
+    },
+    {
+        "type": "models.UserNormal",
+        "username": "anna",
+        "password": "1234",
+        "display": "Anna",
+        "elementsUser": [
+            {
+                "elementOciId": "P-001",
+                "estado": "EN_PROCÉS"
+            },
+            {
+                "elementOciId": "J-003",
+                "estado": "PENDENT"
+            },
+            {
+                "elementOciId": "L-001",
+                "estado": "COMPLETAT"
+            }
+        ]
+    },
+    {
+        "type": "models.UserNormal",
+        "username": "marc",
+        "password": "1234",
+        "display": "Marc",
+        "elementsUser": [
+            {
+                "elementOciId": "S-002",
+                "estado": "PENDENT"
+            },
+            {
+                "elementOciId": "A-001",
+                "estado": "EN_PROCÉS"
+            }
+        ]
+    },
+    {
+        "type": "models.UserNormal",
+        "username": "laia",
+        "password": "1234",
+        "display": "Laia",
+        "elementsUser": [
+            {
+                "elementOciId": "M-001",
+                "estado": "PENDENT"
+            },
+            {
+                "elementOciId": "PC-001",
+                "estado": "PENDENT"
+            },
+            {
+                "elementOciId": "V-001",
+                "estado": "COMPLETAT"
+            }
+        ]
+    },
+    {
+        "type": "models.UserNormal",
+        "username": "joan",
+        "password": "1234",
+        "display": "Joan",
+        "elementsUser": [
+            {
+                "elementOciId": "J-001",
+                "estado": "COMPLETAT"
+            },
+            {
+                "elementOciId": "P-004",
+                "estado": "EN_PROCÉS"
+            },
+            {
+                "elementOciId": "E-002",
+                "estado": "PENDENT"
+            }
+        ]
+    },
+    {
+        "type": "models.UserNormal",
+        "username": "marta",
+        "password": "1234",
+        "display": "Marta",
+        "elementsUser": [
+            {
+                "elementOciId": "S-001",
+                "estado": "PENDENT"
+            }
+        ]
+    },
+    {
+        "type": "models.UserNormal",
+        "username": "nil",
+        "password": "1234",
+        "display": "Nil",
+        "elementsUser": []
+    }
+]

@@ -2,19 +2,13 @@ package app
 
 import models.*
 import exceptions.*
+import repository.*
 
 class GestorOci {
 
-    val elements: MutableList<ElementOci> = mutableListOf()
-
-    val categories: MutableList<Categoria> = mutableListOf()
-
-    val users: MutableList<User> = mutableListOf()
-
-    init {
-        val root = UserSuperAdmin("super", "1234", "Super Usuari")
-        users.add(root)
-    }
+    private val repositorioElemento = GestorRepositorio.repositorioElemento
+    private val repositorioCategoria = GestorRepositorio.repositorioCategoria
+    private val repositorioUsuario = GestorRepositorio.repositorioUsuario
 
     private fun validarElementOci(elemento: ElementOci) {
             if (elemento.id.isBlank()) {
@@ -34,21 +28,21 @@ class GestorOci {
         try {
             validarElementOci(elemento)
 
-            if (elements.any { it.id == elemento.id }) {
+            if (repositorioElemento.encontrarPorId(elemento.id) != null) {
                 throw ElementDuplicatException("Ja existeix un element amb l'ID: ${elemento.id}")
             }
 
-             elements.add(elemento)
+            repositorioElemento.guardar(elemento)
             println("Element creat: $elemento")
-         } catch (e:ElementDuplicatException) {
+        } catch (e:ElementDuplicatException) {
              println("Error: ${e.message}")
-         } catch (e: TextBuitException) {
+        } catch (e: TextBuitException) {
              println("Error: ${e.message}")
-         } catch (e: ValidacioException) {
+        } catch (e: ValidacioException) {
              println("Error: ${e.message}")
-         } catch (e: Exception) {
+        } catch (e: Exception) {
              println(e.message)
-         }
+        }
     }
 
     fun crearCategoria(categoria: Categoria) {
@@ -56,11 +50,12 @@ class GestorOci {
             if (categoria.nombre.isBlank()) {
                 throw TextBuitException("El nom de la categoria no pot estar buit.")
             }
-            if (categories.any { it.nombre.equals(categoria.nombre, ignoreCase = true) }) {
-                throw ElementDuplicatException("La categoria '${categoria.nombre}' ja existeix.")
+            if (repositorioCategoria.encontrarPorId(categoria.id) != null) {
+                throw ElementDuplicatException("La categoria amb nom '${categoria.nombre}' ja existeix.")
             }
 
-            categories.add(categoria)
+            repositorioCategoria.guardar(categoria)
+
             println("Categoria creada correctament.")
          } catch (e: TextBuitException) {
             println("Error: ${e.message}")
@@ -71,20 +66,30 @@ class GestorOci {
          }
     }
 
+    private fun validarCamposUser(username: String, password: String, display: String) {
+        if (username.isBlank()) {
+            throw TextBuitException("El nom d'usuari no pot estar buit.")
+        }
+        if (password.isBlank()) {
+            throw TextBuitException("La contrasenya no pot estar buida.")
+        }
+        if (display.isBlank()) {
+            throw TextBuitException("El nom a mostrar (display) no pot estar buit.")
+        }
+    }
+
     fun crearUser(username: String, password: String, display: String, admin: Boolean) {
         try {
-            if (username.isBlank() || password.isBlank() || display.isBlank()) {
-                throw TextBuitException("L'usuari, la contrasenya i el display no poden estar buits.")
-            }
-            if (users.any { it.username == username }) {
+            validarCamposUser(username, password, display)
+            if (repositorioUsuario.encontrarPorUser(username) != null) {
                 throw ElementDuplicatException("L'usuari '$username' ja existeix.")
             }
 
              if (admin) {
-                users.add(UserAdmin(username, password, display))
+                 repositorioUsuario.guardar(UserAdmin(username, password, display))
                 println("Usuari administrador creat correctament.")
              } else {
-                users.add(UserNormal(username, password, display))
+                 repositorioUsuario.guardar(UserNormal(username, password, display))
                 println("Usuari creat correctament.")
              }
 
@@ -97,59 +102,147 @@ class GestorOci {
         }
     }
 
-    fun mostrarElementosFormateados() {
-        if (elements.isEmpty()) {
+    fun mostrarElementos() {
+        if (repositorioElemento.encontrarTodos().isEmpty()) {
             println("No hi ha elements registrats.")
             return
         }
-        println("ID\t\tTítol\t\tDescripció\t\tCategoria")
-        println("-".repeat(60))
-        elements.forEach {
-            println("${it.id.padEnd(10)}\t${it.titulo.padEnd(20)}\t${it.descripcion.take(20).padEnd(20)}\t${it.categoria.nombre}")
+
+        repositorioElemento.encontrarTodos().forEach {
+            println(it)
         }
     }
 
-    fun mostrarCategoriasFormateadas() {
-        if (categories.isEmpty()) {
+    fun mostrarCategorias() {
+        if (repositorioCategoria.encontrarTodos().isEmpty()) {
             println("No hi ha categories registrades.")
             return
         }
-        println("Nom de la Categoria")
-        println("-".repeat(20))
-        categories.forEach {
-            println(it.nombre)
+        repositorioCategoria.encontrarTodos().forEach {
+            println(it)
         }
     }
 
-    fun mostrarUsuariosFormateados() {
-        if (users.isEmpty()) {
+    fun hayCategoriasDisponibles(): Boolean {
+        return repositorioCategoria.encontrarTodos().isNotEmpty()
+    }
+
+    fun obtenerCategorias(): List<Categoria> {
+        return repositorioCategoria.encontrarTodos()
+    }
+
+    fun hayElementosDisponibles(): Boolean {
+        return repositorioElemento.encontrarTodos().isNotEmpty()
+    }
+
+    fun mostrarUsuarios() {
+        if (repositorioUsuario.encontrarTodos().isEmpty()) {
             println("No hi ha usuaris registrats.")
             return
         }
-        println("Display\t\tUsername\t\tRol")
-        println("-".repeat(40))
-        users.forEach {
-            val rol = when {
-                it.username == "super" -> "Super"
-                it is UserAdmin -> "Admin"
-                else -> "User"
-            }
-            println("${it.display.padEnd(15)}\t${it.username.padEnd(15)}\t$rol")
+        repositorioUsuario.encontrarTodos().forEach {
+            println("${it.display} (${it.username}) - ${if (it is UserSuperAdmin) "Super Administrador" else if (it is UserAdmin) "Administrador" else "Usuari Normal"}")
         }
     }
 
-    fun mostrarMisElementosFormateados(user: UserNormal) {
-        if (user.elementsUser.isEmpty()) {
+    fun mostrarMisElementos(user: UserNormal) {
+        val userActual = repositorioUsuario.encontrarPorUser(user.username) as? UserNormal
+        if (userActual == null || userActual.elementsUser.isEmpty()) {
             println("No tens elements a la teva llista.")
             return
         }
-        println("ID\t\tTítol\t\tEstat")
-        println("-".repeat(40))
-        user.elementsUser.forEach { elemUser ->
-            val elemOriginal = elements.find { it.id == elemUser.elementOciId }
+        userActual.elementsUser.forEach { elemUser ->
+            val elemOriginal = repositorioElemento.encontrarPorId(elemUser.elementOciId)
             if (elemOriginal != null) {
-                println("${elemUser.elementOciId.padEnd(10)}\t${elemOriginal.titulo.padEnd(20)}\t${elemUser.estado.descripcion}")
+                println("[${elemUser.elementOciId}] ${elemOriginal.titulo} - ${elemUser.estado.descripcion}")
+            } else {
+                println("[${elemUser.elementOciId}] (element no disponible) - ${elemUser.estado.descripcion}")
             }
         }
+
+        user.elementsUser.clear()
+        user.elementsUser.addAll(userActual.elementsUser)
+    }
+
+    fun añadirElementoAUsuario(user: UserNormal, idElemento: String): String {
+        if (idElemento.isBlank())
+            throw TextBuitException("L'ID de l'element no pot estar buit.")
+
+
+        val elementoOriginal = repositorioElemento.encontrarPorId(idElemento)
+        if (elementoOriginal == null)
+            throw ElementNoTrobatException("No s'ha trobat cap element amb l'ID '$idElemento'.")
+
+
+        val userActual = repositorioUsuario.encontrarPorUser(user.username) as? UserNormal
+
+        if (userActual == null)
+            throw ElementNoTrobatException("No s'ha trobat l'usuari '${user.username}'.")
+
+
+        if (userActual.elementsUser.any { it.elementOciId == idElemento })
+            throw ElementDuplicatException("Aquest element ja està a la teva llista.")
+
+
+        userActual.crearElemento(ElementUsuari(idElemento, estado = Estado.PENDENT))
+        repositorioUsuario.actualizar(userActual)
+
+        user.elementsUser.clear()
+        user.elementsUser.addAll(userActual.elementsUser)
+
+        return elementoOriginal.titulo
+    }
+
+    fun usuarioTieneElementos(user: UserNormal): Boolean {
+        val userActual = repositorioUsuario.encontrarPorUser(user.username) as? UserNormal
+        return userActual?.elementsUser?.isNotEmpty() == true
+    }
+
+    fun avanzarEstadoElementoUsuario(user: UserNormal, idElemento: String): String {
+        if (idElemento.isBlank()) {
+            throw TextBuitException("L'ID de l'element no pot estar buit.")
+        }
+
+        val userActual = repositorioUsuario.encontrarPorUser(user.username) as? UserNormal
+        if (userActual == null) {
+            throw ElementNoTrobatException("No s'ha trobat l'usuari '${user.username}'.")
+        }
+
+        val elemento = userActual.elementsUser.find { it.elementOciId == idElemento }
+        if (elemento == null) {
+            throw ElementNoTrobatException("L'element amb ID '$idElemento' no es troba a la teva llista.")
+        }
+
+        elemento.AvanzarEstado()
+        repositorioUsuario.actualizar(userActual)
+
+        user.elementsUser.clear()
+        user.elementsUser.addAll(userActual.elementsUser)
+
+        return elemento.estado.descripcion
+    }
+
+    fun retrocederEstadoElementoUsuario(user: UserNormal, idElemento: String): String {
+        if (idElemento.isBlank()) {
+            throw TextBuitException("L'ID de l'element no pot estar buit.")
+        }
+
+        val userActual = repositorioUsuario.encontrarPorUser(user.username) as? UserNormal
+        if (userActual == null) {
+            throw ElementNoTrobatException("No s'ha trobat l'usuari '${user.username}'.")
+        }
+
+        val elemento = userActual.elementsUser.find { it.elementOciId == idElemento }
+        if (elemento == null) {
+            throw ElementNoTrobatException("L'element amb ID '$idElemento' no es troba a la teva llista.")
+        }
+
+        elemento.RetrocederEstado()
+        repositorioUsuario.actualizar(userActual)
+
+        user.elementsUser.clear()
+        user.elementsUser.addAll(userActual.elementsUser)
+
+        return elemento.estado.descripcion
     }
 }

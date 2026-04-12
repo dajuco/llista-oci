@@ -1,5 +1,9 @@
 package models
 
+import kotlinx.serialization.Serializable
+
+@Serializable
+
 class ElementUsuari(
     val elementOciId: String,
     var estado: Estado

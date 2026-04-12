@@ -1,8 +1,9 @@
 package menus
 
-import app.GestorOci
-import models.*
+import app.*
 import exceptions.*
+import repository.*
+
 
 fun menuSuperAdmin(gestor: GestorOci) {
     var option: String?
@@ -32,7 +33,7 @@ fun crearUser(gestor: GestorOci) {
 
             if (username.isBlank())
                 throw TextBuitException("El nom d'usuari no pot estar buit.")
-            if (gestor.users.any { it.username.equals(username, ignoreCase = true) })
+            if (GestorRepositorio.repositorioUsuario.encontrarPorUser(username) != null)
                 throw ElementDuplicatException("El nom d'usuari '$username' ja existeix.")
 
         print("Introdueix la contrasenya: ")
@@ -52,6 +53,7 @@ fun crearUser(gestor: GestorOci) {
         val isAdmin = readln().trim().lowercase() == "s"
 
 
+
         gestor.crearUser(username, password, display, isAdmin)
     } catch (e: TextBuitException) {
         println(e.message)
@@ -63,5 +65,5 @@ fun crearUser(gestor: GestorOci) {
 }
 
 fun mostrarUsuaris(gestor: GestorOci) {
-    gestor.mostrarUsuariosFormateados()
+    gestor.mostrarUsuarios()
 }

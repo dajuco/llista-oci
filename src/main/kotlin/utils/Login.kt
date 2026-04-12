@@ -1,9 +1,10 @@
 package utils
 
 import models.*
+import repository.*
 
 
-fun iniciarSesion(lista: List<User>): User? {
+fun iniciarSesion(): User? {
     println("Iniciar Sessió")
     println("Introdueix l'usuari")
     val userReq = readlnOrNull()?.trim() ?: ""
@@ -16,5 +17,8 @@ fun iniciarSesion(lista: List<User>): User? {
         return null
     }
 
-    return lista.find { it.username == userReq && it.password == passwReq }
+    return GestorRepositorio.repositorioUsuario
+        .encontrarTodos()
+        .find { it.username == userReq && it.password == passwReq }
+
 }

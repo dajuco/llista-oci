@@ -3,16 +3,10 @@ import models.*
 import utils.*
 import menus.*
 
-val MODO_DESARROLLO = true
-
 fun main() {
     System.setOut(java.io.PrintStream(System.out, true, "UTF-8"))
 
     val gestor = GestorOci()
-    
-    if (MODO_DESARROLLO) {
-        cargarDatosDePrueba(gestor)
-    }
 
     var activo = true
 
@@ -29,7 +23,7 @@ fun main() {
 
             "1" -> {
 
-                val userLogged = iniciarSesion(gestor.users)
+                val userLogged = iniciarSesion()
 
                 if (userLogged == null) {
                     println("accés denegat")

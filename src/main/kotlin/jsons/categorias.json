@@ -1,0 +1,42 @@
+[
+	{
+		"id": "Pel·lícules",
+		"nombre": "Pel·lícules"
+	},
+	{
+		"id": "Videojocs",
+		"nombre": "Videojocs"
+	},
+	{
+		"id": "Sèries",
+		"nombre": "Sèries"
+	},
+	{
+		"id": "Anime",
+		"nombre": "Anime"
+	},
+	{
+		"id": "Música",
+		"nombre": "Música"
+	},
+	{
+		"id": "Llibres",
+		"nombre": "Llibres"
+	},
+	{
+		"id": "Podcasts",
+		"nombre": "Podcasts"
+	},
+	{
+		"id": "Esport",
+		"nombre": "Esport"
+	},
+	{
+		"id": "Tecnologia",
+		"nombre": "Tecnologia"
+	},
+	{
+		"id": "Viatges",
+		"nombre": "Viatges"
+	}
+]

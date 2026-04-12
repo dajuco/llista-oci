@@ -1,8 +1,11 @@
 package models
 
-class UserAdmin (
-    username: String,
-    password: String,
-    display: String
-) : User(username, password, display) {
-}
+import kotlinx.serialization.Serializable
+
+@Serializable
+class UserAdmin(
+    override val username: String,
+    override val password: String,
+    override val display: String,
+    override val id: String = username
+) : User()

@@ -1,5 +1,9 @@
 package models
 
+import kotlinx.serialization.Serializable
+
+@Serializable
+
 enum class Estado(val id: Int, val descripcion: String) {
     PENDENT(1, "Pendent"),
     EN_PROCÉS(2, "En Procés"),

@@ -1,3 +1,10 @@
 package models
 
-data class Categoria(val nombre: String)
+import kotlinx.serialization.Serializable
+
+@Serializable
+
+data class Categoria(
+    val id: String,
+    val nombre: String
+)
