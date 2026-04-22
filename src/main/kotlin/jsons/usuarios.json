@@ -103,7 +103,18 @@
         "type": "models.UserNormal",
         "username": "nil",
         "password": "1234",
-        "display": "Nil",
-        "elementsUser": []
+        "display": "Nil"
+    },
+    {
+        "type": "models.UserNormal",
+        "username": "test",
+        "password": "1234",
+        "display": "test"
+    },
+    {
+        "type": "models.UserNormal",
+        "username": "Gerard",
+        "password": "EwnizEv5",
+        "display": "Gerard P."
     }
 ]

@@ -1,0 +1,15 @@
+[
+  {
+    "id": "IT-001",
+    "title": "Leer Clean Architecture",
+    "category": "Libros",
+    "status": "IN_PROGRESS"
+  },
+  {
+    "id": "IT-002",
+    "title": "Jugar una partida corta",
+    "category": "Juegos",
+    "status": "PENDING"
+  }
+]
+
