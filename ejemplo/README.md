@@ -46,3 +46,11 @@ cd /home/super/IdeaProjects/llista-oci/ejemplo
 - Si quieres reiniciar datos, borra `data/items.json`.
 - Este ejemplo usa Compose Desktop para simplificar el aprendizaje en IntelliJ IDEA.
 
+## Como estudiar este ejemplo
+
+- Lee primero `src/main/kotlin/app/Main.kt` para entender el arranque y el cableado.
+- Sigue con `src/main/kotlin/ui/AppScreen.kt` para ver la UI declarativa y los callbacks.
+- Revisa `src/main/kotlin/viewmodel/AppViewModel.kt` para estado, validaciones y flujo.
+- Termina en `src/main/kotlin/repository/` para ver persistencia JSON.
+- Los comentarios explican por que se hace cada paso en el flujo MVVM.
+

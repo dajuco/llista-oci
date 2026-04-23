@@ -26,8 +26,10 @@ import model.Item
 import model.ItemStatus
 import viewmodel.AppViewModel
 
+// Route principal: observa estado del ViewModel y conecta callbacks.
 @Composable
 fun AppScreen(viewModel: AppViewModel) {
+    // collectAsState convierte StateFlow en estado observable por Compose.
     val state by viewModel.uiState.collectAsState()
 
     MaterialTheme {
@@ -38,6 +40,7 @@ fun AppScreen(viewModel: AppViewModel) {
             Text("Compose MVVM - Ejemplo", style = MaterialTheme.typography.h5)
             Text("Flujo: UI -> ViewModel -> Repository -> JSON")
 
+            // Formulario de alta: UI captura entrada y delega al ViewModel.
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedTextField(
                     value = state.titleInput,
@@ -56,6 +59,7 @@ fun AppScreen(viewModel: AppViewModel) {
                 }
             }
 
+            // Mensajes de feedback para usuario.
             state.errorMessage?.let {
                 Text(text = it, color = Color(0xFFB00020))
             }
@@ -64,6 +68,7 @@ fun AppScreen(viewModel: AppViewModel) {
                 Text(text = it, color = Color(0xFF1B5E20))
             }
 
+            // Estados visuales: loading / empty / content.
             if (state.isLoading) {
                 CircularProgressIndicator()
             }
@@ -76,6 +81,7 @@ fun AppScreen(viewModel: AppViewModel) {
                 items(state.items, key = { it.id }) { item ->
                     ItemRow(
                         item = item,
+                        // Callbacks de UI: no hay logica de negocio aqui.
                         onCycle = { viewModel.cycleStatus(item) },
                         onDelete = { viewModel.deleteItem(item) }
                     )
@@ -91,6 +97,7 @@ private fun ItemRow(
     onCycle: () -> Unit,
     onDelete: () -> Unit
 ) {
+    // Composable presentacional de una fila de lista.
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             Text(text = "${item.id} - ${item.title}")
@@ -105,6 +112,7 @@ private fun ItemRow(
     }
 }
 
+// Traduccion simple para mostrar enum en texto legible.
 private fun ItemStatus.readable(): String = when (this) {
     ItemStatus.PENDING -> "PENDIENTE"
     ItemStatus.IN_PROGRESS -> "EN PROCESO"

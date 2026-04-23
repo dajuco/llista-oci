@@ -15,6 +15,8 @@ import repository.ItemRepository
 import java.io.Closeable
 import java.util.UUID
 
+// Estado unico de la pantalla.
+// La UI solo renderiza este estado y envia eventos al ViewModel.
 data class AppUiState(
     val isLoading: Boolean = false,
     val items: List<Item> = emptyList(),
@@ -28,16 +30,22 @@ class AppViewModel(
     private val repository: ItemRepository
 ) : Closeable {
 
+    // SupervisorJob evita que un fallo cancele todo el arbol de tareas.
     private val job = SupervisorJob()
+    // En este ejemplo usamos Dispatchers.Default para trabajo en background.
     private val scope = CoroutineScope(job + Dispatchers.Default)
 
+    // Estado interno mutable.
     private val _uiState = MutableStateFlow(AppUiState())
+    // Estado publico inmutable para la UI.
     val uiState: StateFlow<AppUiState> = _uiState.asStateFlow()
 
     init {
+        // Carga inicial al crear el ViewModel.
         loadItems()
     }
 
+    // Eventos de entrada: solo actualizan estado de formulario.
     fun onTitleChange(value: String) {
         _uiState.update { it.copy(titleInput = value, errorMessage = null, infoMessage = null) }
     }
@@ -47,12 +55,14 @@ class AppViewModel(
     }
 
     fun addItem() {
+        // Tomamos snapshot para validar de forma consistente.
         val snapshot = _uiState.value
         if (snapshot.titleInput.isBlank() || snapshot.categoryInput.isBlank()) {
             _uiState.update { it.copy(errorMessage = "Rellena titulo y categoria") }
             return
         }
 
+        // Mapeo de campos de formulario a entidad de dominio.
         val item = Item(
             id = buildItemId(),
             title = snapshot.titleInput.trim(),
@@ -62,6 +72,7 @@ class AppViewModel(
 
         scope.launch {
             runCatching {
+                // Flujo MVVM: ViewModel -> Repository.
                 repository.add(item)
                 repository.loadAll()
             }.onSuccess { items ->
@@ -81,6 +92,7 @@ class AppViewModel(
     }
 
     fun cycleStatus(item: Item) {
+        // Regla de presentacion: ciclo circular de estado.
         val next = when (item.status) {
             ItemStatus.PENDING -> ItemStatus.IN_PROGRESS
             ItemStatus.IN_PROGRESS -> ItemStatus.DONE
@@ -112,12 +124,14 @@ class AppViewModel(
         }
     }
 
+    // Util para limpiar mensajes desde UI si fuese necesario.
     fun clearMessages() {
         _uiState.update { it.copy(errorMessage = null, infoMessage = null) }
     }
 
     private fun loadItems() {
         scope.launch {
+            // Estado de carga para feedback visual.
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
             runCatching { repository.loadAll() }
                 .onSuccess { items ->
@@ -131,9 +145,11 @@ class AppViewModel(
         }
     }
 
+    // ID simple para ejemplo didactico.
     private fun buildItemId(): String = "IT-${UUID.randomUUID().toString().take(6).uppercase()}"
 
     override fun close() {
+        // Libera corutinas al cerrar la ventana.
         job.cancel()
         scope.cancel()
     }
