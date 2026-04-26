@@ -4,21 +4,21 @@ import models.*
 import repository.*
 
 
-fun iniciarSesion(): User? {
-    println("Iniciar Sessió")
+fun iniciarSessio(): User? {
+    println("Inicia la sessió")
     println("Introdueix l'usuari")
-    val userReq = readlnOrNull()?.trim() ?: ""
+    val usuariRequerit = readlnOrNull()?.trim() ?: ""
 
     println("Introdueix la contrasenya")
-    val passwReq = readlnOrNull()?.trim() ?: ""
+    val contrasenyaRequerida = readlnOrNull()?.trim() ?: ""
 
-    if (userReq.isBlank() || passwReq.isBlank()) {
+    if (usuariRequerit.isBlank() || contrasenyaRequerida.isBlank()) {
         println("L'usuari i la contrasenya no poden estar buits.")
         return null
     }
 
     return GestorRepositorio.repositorioUsuario
-        .encontrarTodos()
-        .find { it.username == userReq && it.password == passwReq }
+        .trobarTots()
+        .find { it.username == usuariRequerit && it.password == contrasenyaRequerida }
 
 }

@@ -1,16 +1,14 @@
 package utils
 
-import models.*
 import app.*
+import models.*
 import repository.*
 
-fun buscarElementoPorId(gestor: GestorOci, id: String): ElementOci? {
-    return GestorRepositorio.repositorioElemento.encontrarPorId(id)
+fun buscarElementPerId(gestor: GestorOci, id: String): ElementOci? {
+    return GestorRepositorio.repositorioElemento.trobarPerId(id)
 }
 
-
-
-fun filtrarPorCategoria(gestor: GestorOci, nombreCategoria: String): List<ElementOci> {
-    return GestorRepositorio.repositorioElemento.encontrarTodos()
-        .filter { it.categoria.nombre.equals(nombreCategoria, ignoreCase = true) }
+fun filtrarPerCategoria(gestor: GestorOci, nomCategoria: String): List<ElementOci> {
+    return GestorRepositorio.repositorioElemento.trobarTots()
+        .filter { it.categoria.nombre.equals(nomCategoria, ignoreCase = true) }
 }

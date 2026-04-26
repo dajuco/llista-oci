@@ -5,7 +5,7 @@ import exceptions.*
 import repository.*
 
 
-fun menuSuperAdmin(gestor: GestorOci) {
+fun menuSuperAdministrador(gestor: GestorOci) {
     var option: String?
      do {
          println("\n--- Panell de Super Administrador ---")
@@ -16,15 +16,15 @@ fun menuSuperAdmin(gestor: GestorOci) {
          option = readlnOrNull()
 
          when (option) {
-             "1" -> crearUser(gestor)
-             "2" -> mostrarUsuaris(gestor)
+              "1" -> crearUsuari(gestor)
+              "2" -> mostrarUsuaris(gestor)
              "0" -> println("Sortint del menú...")
              else -> println("Opció no vàlida.")
          }
      } while (option != "0")
 }
 
-fun crearUser(gestor: GestorOci) {
+fun crearUsuari(gestor: GestorOci) {
 
     try {
         println("--- Crear Nou Usuari ---")
@@ -33,7 +33,7 @@ fun crearUser(gestor: GestorOci) {
 
             if (username.isBlank())
                 throw TextBuitException("El nom d'usuari no pot estar buit.")
-            if (GestorRepositorio.repositorioUsuario.encontrarPorUser(username) != null)
+            if (GestorRepositorio.repositorioUsuario.trobarPerUsuari(username) != null)
                 throw ElementDuplicatException("El nom d'usuari '$username' ja existeix.")
 
         print("Introdueix la contrasenya: ")
@@ -54,7 +54,7 @@ fun crearUser(gestor: GestorOci) {
 
 
 
-        gestor.crearUser(username, password, display, isAdmin)
+        gestor.crearUsuari(username, password, display, isAdmin)
     } catch (e: TextBuitException) {
         println(e.message)
     } catch (e: ElementDuplicatException) {
@@ -65,5 +65,5 @@ fun crearUser(gestor: GestorOci) {
 }
 
 fun mostrarUsuaris(gestor: GestorOci) {
-    gestor.mostrarUsuarios()
+    gestor.mostrarUsuaris()
 }

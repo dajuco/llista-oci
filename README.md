@@ -1,10 +1,10 @@
 # llista-oci
-Projecte creat amb Kotlin per a poder gestionar coses varies en temps d'esbarjo o lliure
+Projecte creat amb Kotlin per gestionar continguts d'oci i lleure
 
-Fa servir Jetpack compose per a la ui
+Fa servir Jetpack Compose per a la interfície gràfica
 
 ## Funcions
-- Registrar series, pelis, jocs o altres
-- anyadir etiquetes per a diferents tipus
-- gestor d'estats
-- filtrar les llistes
+- Registrar sèries, pel·lícules, jocs o altres elements
+- Afegir etiquetes per a diferents tipus
+- Gestionar estats
+- Filtrar les llistes

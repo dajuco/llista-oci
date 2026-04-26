@@ -10,10 +10,10 @@ class ElementUsuari(
 )
 {
 
-    fun AvanzarEstado() {
+    fun avançarEstat() {
         val siguienteId = estado.id + 1
 
-        val siguienteEstado = Estado.getEstado(siguienteId)
+        val siguienteEstado = Estado.obtenirEstat(siguienteId)
 
         if (siguienteEstado != null) {
             estado = siguienteEstado
@@ -21,11 +21,11 @@ class ElementUsuari(
     }
 
 
-    fun RetrocederEstado() {
+    fun retrocedirEstat() {
 
         val anteriorId = estado.id - 1
 
-        val anteriorEstado = Estado.getEstado(anteriorId)
+        val anteriorEstado = Estado.obtenirEstat(anteriorId)
 
         if (anteriorEstado != null) {
             estado = anteriorEstado

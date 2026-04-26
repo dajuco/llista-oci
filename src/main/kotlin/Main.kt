@@ -23,7 +23,7 @@ fun main() {
 
             "1" -> {
 
-                val userLogged = iniciarSesion()
+                val userLogged = iniciarSessio()
 
                 if (userLogged == null) {
                     println("accés denegat")
@@ -33,17 +33,17 @@ fun main() {
                     when (userLogged) {
                         is UserSuperAdmin -> {
                             println("Panell de Super Administrador")
-                            menuSuperAdmin(gestor)
+                            menuSuperAdministrador(gestor)
                         }
 
                         is UserAdmin -> {
                             println("Panell de Administrador")
-                            menuAdmin(gestor)
+                            menuAdministrador(gestor)
                         }
 
                         is UserNormal -> {
                             println("Panell d'Usuari")
-                            menuNormal(gestor, userLogged)
+                            menuUsuari(gestor, userLogged)
                         }
                     }
                 }

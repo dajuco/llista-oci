@@ -44,6 +44,10 @@
             {
                 "elementOciId": "A-001",
                 "estado": "EN_PROCÉS"
+            },
+            {
+                "elementOciId": "V-002",
+                "estado": "PENDENT"
             }
         ]
     },

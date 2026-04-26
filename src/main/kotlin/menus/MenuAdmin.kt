@@ -6,7 +6,7 @@ import exceptions.*
 import repository.*
 
 
-fun menuAdmin(gestor: GestorOci) {
+fun menuAdministrador(gestor: GestorOci) {
      var option: String?
      do {
          println("\n--- Panell de Administrador ---")
@@ -17,8 +17,8 @@ fun menuAdmin(gestor: GestorOci) {
          option = readlnOrNull()
 
          when (option) {
-             "1" -> crearElemento(gestor)
-             "2" -> crearCategoria(gestor)
+              "1" -> crearElement(gestor)
+              "2" -> crearCategoria(gestor)
              "0" -> println("Sortint del panell...")
              else -> println("Opció no vàlida.")
          }
@@ -26,9 +26,9 @@ fun menuAdmin(gestor: GestorOci) {
 }
 
 
-fun crearElemento(gestor: GestorOci) {
+fun crearElement(gestor: GestorOci) {
     try {
-        if (gestor.hayCategoriasDisponibles()) {
+        if (gestor.hiHaCategoriesDisponibles()) {
 
             println("--- Crear Nou Element ---")
 
@@ -37,7 +37,7 @@ fun crearElemento(gestor: GestorOci) {
 
             if (id.isBlank())
                 throw ValidacioException("l'id de l'element no pot estar buit.")
-            if (GestorRepositorio.repositorioElemento.encontrarPorId(id) != null)
+            if (GestorRepositorio.repositorioElemento.trobarPerId(id) != null)
                 throw ElementDuplicatException("Ja existeix un element amb l'ID: $id")
             val regexId = "^[a-zA-Z0-9_-]+$".toRegex()
             if (!regexId.matches(id))
@@ -48,7 +48,7 @@ fun crearElemento(gestor: GestorOci) {
 
             if (titulo.isBlank())
                 throw ValidacioException("El títol no pot estar buit.")
-            if (GestorRepositorio.repositorioElemento.encontrarPorTitulo(titulo) != null)
+            if (GestorRepositorio.repositorioElemento.trobarPerTitol(titulo) != null)
                 throw ElementDuplicatException("Ja existeix un element amb el títol: $titulo")
 
             println("Introdueix la descripció: ")
@@ -59,15 +59,15 @@ fun crearElemento(gestor: GestorOci) {
 
             println("Categories existents:")
 
-            println("Categories existents: ${gestor.obtenerCategorias().joinToString { it.nombre }}")
+            println("Categories existents: ${gestor.obtenirCategories().joinToString { it.nombre }}")
 
             println("Introdueix la categoria: ")
             val nombreCategoria = readln().trim()
-            val categoria = gestor.obtenerCategorias().find { it.id == nombreCategoria }
+            val categoria = gestor.obtenirCategories().find { it.id == nombreCategoria }
 
             if (categoria != null) {
                 val elemento = ElementOci(id, titulo, descripcion, categoria)
-                gestor.crearElemento(elemento)
+                gestor.crearElement(elemento)
             } else {
                 throw ElementNoTrobatException("No s'ha trobat cap categoria amb el nom '$nombreCategoria'.")
             }
@@ -95,12 +95,12 @@ fun crearCategoria(gestor: GestorOci) {
          if (nombre.isBlank())
              throw TextBuitException("El nom de la categoria no pot estar buit.")
 
-         if (GestorRepositorio.repositorioCategoria.encontrarPorId(nombre) != null)
+          if (GestorRepositorio.repositorioCategoria.trobarPerId(nombre) != null)
              throw ElementDuplicatException("La categoria '$nombre' ja existeix.")
 
          val categoria = Categoria(nombre, nombre)
 
-         gestor.crearCategoria(categoria)
+          gestor.crearCategoria(categoria)
      } catch (e: TextBuitException) {
          println(e.message)
      } catch (e: ElementDuplicatException) {

@@ -29,12 +29,12 @@ tasks.test {
 }
 
 tasks.withType<Jar> {
-    // 1. Decimos cuál es la clase principal
+    // 1. Indiquem quina és la classe principal
     manifest {
         attributes["Main-Class"] = "MainKt"
     }
 
-    // 2. Este bloque "clona" las librerías de Kotlin dentro de tu JAR
+    // 2. Aquest bloc "clona" les biblioteques de Kotlin dins del JAR
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
 }

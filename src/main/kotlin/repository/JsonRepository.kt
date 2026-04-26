@@ -13,7 +13,7 @@ class RepositorioJson<T> (
 
     private val json = Json { prettyPrint = true }
 
-    private fun leerDesdeArchivo(): MutableList<T> {
+    private fun llegirDesdeArxiu(): MutableList<T> {
         val archivo = File(archivo)
         if (!archivo.exists()) {
             return mutableListOf()
@@ -38,18 +38,18 @@ class RepositorioJson<T> (
 
 
 
-    override fun guardar(elemento: T) {
-        val elementos = leerDesdeArchivo()
-        elementos.add(elemento)
+    override fun desar(element: T) {
+        val elementos = llegirDesdeArxiu()
+        elementos.add(element)
         escribirEnArchivo(elementos)
     }
 
-    override fun encontrarTodos(): List<T> {
-        return leerDesdeArchivo()
+    override fun trobarTots(): List<T> {
+        return llegirDesdeArxiu()
     }
 
     override fun eliminar(id: String) {
-        val elementos = leerDesdeArchivo()
+        val elementos = llegirDesdeArxiu()
 
         val filtrados = elementos.filterNot {
             val idElemento = it!!::class.members
@@ -62,12 +62,12 @@ class RepositorioJson<T> (
         escribirEnArchivo(filtrados)
     }
 
-    override fun actualizar(elemento: T): Boolean {
-        val elementos = leerDesdeArchivo()
+    override fun actualitzar(element: T): Boolean {
+        val elementos = llegirDesdeArxiu()
 
-        val idElemento = elemento!!::class.members
+        val idElemento = element!!::class.members
             .firstOrNull { m -> m.name == "id" }
-            ?.call(elemento) as? String ?: return false
+            ?.call(element) as? String ?: return false
 
         val indice = elementos.indexOfFirst {
             val idActual = it!!::class.members
@@ -78,7 +78,7 @@ class RepositorioJson<T> (
         }
 
         if (indice != -1) {
-            elementos[indice] = elemento
+            elementos[indice] = element
             escribirEnArchivo(elementos)
             return true
         }
@@ -86,8 +86,8 @@ class RepositorioJson<T> (
         return false
     }
 
-    override fun encontrarPorId(id: String): T? {
-        val elementos = leerDesdeArchivo()
+    override fun trobarPerId(id: String): T? {
+        val elementos = llegirDesdeArxiu()
         return elementos.find {
             val idActual = it!!::class.members
                 .firstOrNull { m -> m.name == "id" }
@@ -97,26 +97,26 @@ class RepositorioJson<T> (
         }
     }
 
-    override fun encontrarPorTitulo(titulo: String): T? {
-        val elementos = leerDesdeArchivo()
+    override fun trobarPerTitol(titol: String): T? {
+        val elementos = llegirDesdeArxiu()
         return elementos.find {
             val tituloActual = it!!::class.members
                 .firstOrNull { m -> m.name == "titulo" }
                 ?.call(it) as? String
 
-            tituloActual == titulo
+            tituloActual == titol
         }
 
     }
 
-    override fun encontrarPorUser(usuario: String): T? {
-        val elementos = leerDesdeArchivo()
+    override fun trobarPerUsuari(usuari: String): T? {
+        val elementos = llegirDesdeArxiu()
         return elementos.find {
             val usuarioActual = it!!::class.members
                 .firstOrNull { m -> m.name == "username" }
                 ?.call(it) as? String
 
-            usuarioActual == usuario
+            usuarioActual == usuari
         }
 
     }

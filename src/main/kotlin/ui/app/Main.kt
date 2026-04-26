@@ -1,16 +1,22 @@
 package ui.app
 
-import androidx.compose.runtime.remember
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.application
-import java.nio.file.Path
-import repository.*
-import ui.*
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.window.*
+import ui.screens.*
+import ui.viewmodel.*
 
-fun main_() = application {
-    val viewModel = remember {
-        AppViewModel(
-            repository = RepositorioJson()
-        )
+fun main() = application {
+    val viewModel = remember { ViewModel() }
+
+    Window(
+        onCloseRequest = {
+            exitApplication()
+        },
+        title = "Llista Oci"
+    ) {
+        MaterialTheme {
+            PantallaAplicacio(viewModel)
+        }
     }
 }

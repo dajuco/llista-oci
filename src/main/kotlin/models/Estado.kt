@@ -10,12 +10,12 @@ enum class Estado(val id: Int, val descripcion: String) {
     COMPLETAT(3, "Completat");
 
     companion object {
-        fun getEstado(id: Int): Estado? {
+        fun obtenirEstat(id: Int): Estado? {
             return values().firstOrNull { it.id == id }
         }
 
-        fun getDescription(id: Int): String {
-            return getEstado(id)?.descripcion ?: "Desconegut"
+        fun obtenirDescripcio(id: Int): String {
+            return obtenirEstat(id)?.descripcion ?: "Desconegut"
         }
     }
 }

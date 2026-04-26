@@ -12,7 +12,7 @@ class UserNormal(
 ) : User() {
 
 
-    fun crearElemento(elemento: ElementUsuari) {
-        elementsUser.add(elemento)
+    fun afegirElement(element: ElementUsuari) {
+        elementsUser.add(element)
     }
 }
