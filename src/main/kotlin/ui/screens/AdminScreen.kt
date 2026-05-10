@@ -8,6 +8,11 @@ import androidx.compose.ui.*
 import androidx.compose.ui.unit.dp
 import ui.viewmodel.OciState
 
+/**
+ * Panell d'administració del catàleg.
+ *
+ * Permet crear categories i elements, i consultar el contingut registrat.
+ */
 @Composable
 fun PantallaAdmin(
     ociState: OciState,

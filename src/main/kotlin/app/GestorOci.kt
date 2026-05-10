@@ -4,6 +4,12 @@ import models.*
 import exceptions.*
 import repository.*
 
+/**
+ * Coordinador de la lògica de negoci de l'aplicació.
+ *
+ * Valida les dades, aplica regles de negoci i delega la persistència al
+ * repositori JSON compartit entre Desktop i Android.
+ */
 class GestorOci {
 
     private val repositorioElemento = GestorRepositorio.repositorioElemento
@@ -24,6 +30,11 @@ class GestorOci {
             }
     }
 
+    /**
+     * Desa un nou element d'oci al repositori.
+     *
+     * @param element element a crear.
+     */
     fun crearElement(element: ElementOci) {
         try {
             validarElementLleure(element)
@@ -45,6 +56,11 @@ class GestorOci {
         }
     }
 
+    /**
+     * Desa una nova categoria al repositori.
+     *
+     * @param categoria categoria a crear.
+     */
     fun crearCategoria(categoria: Categoria) {
         try {
             if (categoria.nombre.isBlank()) {
@@ -78,6 +94,14 @@ class GestorOci {
         }
     }
 
+    /**
+     * Crea un usuari normal o administrador segons el valor d'`admin`.
+     *
+     * @param username nom d'usuari.
+     * @param password contrasenya de l'usuari.
+     * @param display nom visible a la interfície.
+     * @param admin indica si cal crear un usuari administrador.
+     */
     fun crearUsuari(username: String, password: String, display: String, admin: Boolean) {
         try {
             validarCampsUsuari(username, password, display)
@@ -102,6 +126,9 @@ class GestorOci {
         }
     }
 
+    /**
+     * Escriu per consola tots els elements disponibles.
+     */
     fun mostrarElements() {
         if (repositorioElemento.trobarTots().isEmpty()) {
             println("No hi ha elements registrats.")
@@ -113,6 +140,9 @@ class GestorOci {
         }
     }
 
+    /**
+     * Escriu per consola totes les categories registrades.
+     */
     fun mostrarCategories() {
         if (repositorioCategoria.trobarTots().isEmpty()) {
             println("No hi ha categories registrades.")
@@ -123,18 +153,36 @@ class GestorOci {
         }
     }
 
+    /**
+     * Indica si hi ha categories disponibles.
+     *
+     * @return `true` si existeix almenys una categoria.
+     */
     fun hiHaCategoriesDisponibles(): Boolean {
         return repositorioCategoria.trobarTots().isNotEmpty()
     }
 
+    /**
+     * Obté totes les categories disponibles.
+     *
+     * @return llista de categories.
+     */
     fun obtenirCategories(): List<Categoria> {
         return repositorioCategoria.trobarTots()
     }
 
+    /**
+     * Indica si hi ha elements d'oci registrats.
+     *
+     * @return `true` si el catàleg no està buit.
+     */
     fun hiHaElementsDisponibles(): Boolean {
         return repositorioElemento.trobarTots().isNotEmpty()
     }
 
+    /**
+     * Escriu per consola tots els usuaris registrats.
+     */
     fun mostrarUsuaris() {
         if (repositorioUsuario.trobarTots().isEmpty()) {
             println("No hi ha usuaris registrats.")
@@ -145,6 +193,11 @@ class GestorOci {
         }
     }
 
+    /**
+     * Escriu per consola la llista personal d'elements d'un usuari normal.
+     *
+     * @param user usuari autenticat.
+     */
     fun mostrarMeusElements(user: UserNormal) {
         val userActual = repositorioUsuario.trobarPerUsuari(user.username) as? UserNormal
         if (userActual == null || userActual.elementsUser.isEmpty()) {
@@ -164,6 +217,13 @@ class GestorOci {
         user.elementsUser.addAll(userActual.elementsUser)
     }
 
+    /**
+     * Afegeix un element a la llista personal de l'usuari.
+     *
+     * @param user usuari autenticat.
+     * @param idElement identificador de l'element a afegir.
+     * @return títol de l'element afegit.
+     */
     fun afegirElementAUsuari(user: UserNormal, idElement: String): String {
         if (idElement.isBlank())
             throw TextBuitException("L'ID de l'element no pot estar buit.")
@@ -193,11 +253,24 @@ class GestorOci {
         return elementoOriginal.titulo
     }
 
+    /**
+     * Indica si l'usuari té elements a la seva llista.
+     *
+     * @param user usuari autenticat.
+     * @return `true` si hi ha elements a la llista personal.
+     */
     fun usuariTeElements(user: UserNormal): Boolean {
         val userActual = repositorioUsuario.trobarPerUsuari(user.username) as? UserNormal
         return userActual?.elementsUser?.isNotEmpty() == true
     }
 
+    /**
+     * Avança l'estat d'un element personalitzat de l'usuari.
+     *
+     * @param user usuari autenticat.
+     * @param idElement identificador de l'element a modificar.
+     * @return descripció textual del nou estat.
+     */
     fun avancarEstatElementUsuari(user: UserNormal, idElement: String): String {
         if (idElement.isBlank()) {
             throw TextBuitException("L'ID de l'element no pot estar buit.")
@@ -222,6 +295,13 @@ class GestorOci {
         return elemento.estado.descripcion
     }
 
+    /**
+     * Retrocedeix l'estat d'un element personalitzat de l'usuari.
+     *
+     * @param user usuari autenticat.
+     * @param idElement identificador de l'element a modificar.
+     * @return descripció textual del nou estat.
+     */
     fun retrocedirEstatElementUsuari(user: UserNormal, idElement: String): String {
         if (idElement.isBlank()) {
             throw TextBuitException("L'ID de l'element no pot estar buit.")

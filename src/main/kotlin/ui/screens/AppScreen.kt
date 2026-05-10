@@ -4,6 +4,14 @@ import androidx.compose.runtime.*
 import models.*
 import ui.viewmodel.*
 
+/**
+ * Pantalla arrel de l'aplicació Compose.
+ *
+ * Decideix si cal mostrar l'inici de sessió o el panell corresponent segons
+ * l'usuari autenticat.
+ *
+ * @param viewModel ViewModel compartit amb la UI.
+ */
 @Composable
 fun PantallaAplicacio(viewModel: ViewModel) {
     val ociState = viewModel.ociState
@@ -54,7 +62,7 @@ fun PantallaAplicacio(viewModel: ViewModel) {
                 ociState = ociState,
                 onElementObjectiuIdCanvi = viewModel::actualitzarElementObjectiuId,
                 onAfegirElement = viewModel::afegirElementAUsuari,
-                onAvancarEstat = viewModel::avançarEstatElement,
+                onAvancarEstat = viewModel::avancarEstatElement,
                 onRetrocedirEstat = viewModel::retrocedirEstatElement,
                 onRefrescar = viewModel::refrescarDadesRolActual,
                 onNetejarMissatges = viewModel::netejarMissatges,

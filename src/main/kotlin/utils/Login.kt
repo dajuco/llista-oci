@@ -4,6 +4,11 @@ import models.*
 import repository.*
 
 
+/**
+ * Intenta autenticar un usuari a partir de l'entrada per consola.
+ *
+ * @return l'usuari autenticat o `null` si les credencials són invàlides.
+ */
 fun iniciarSessio(): User? {
     println("Inicia la sessió")
     println("Introdueix l'usuari")

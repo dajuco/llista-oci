@@ -1,22 +1,21 @@
 package ui.app
 
-import androidx.compose.material.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.window.*
-import ui.screens.*
-import ui.viewmodel.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.Composable
+import ui.screens.PantallaAplicacio
+import ui.viewmodel.ViewModel
 
-fun main() = application {
-    val viewModel = remember { ViewModel() }
-
-    Window(
-        onCloseRequest = {
-            exitApplication()
-        },
-        title = "Llista Oci"
-    ) {
-        MaterialTheme {
-            PantallaAplicacio(viewModel)
-        }
+/**
+ * Arrel Compose compartida per a Android i Desktop.
+ *
+ * La plataforma es limita a crear la finestra o l'activitat i delega la UI a
+ * aquesta funció.
+ *
+ * @param viewModel ViewModel compartit amb la pantalla principal.
+ */
+@Composable
+fun App(viewModel: ViewModel) {
+    MaterialTheme {
+        PantallaAplicacio(viewModel)
     }
 }

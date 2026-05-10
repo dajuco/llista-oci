@@ -8,6 +8,11 @@ import androidx.compose.ui.*
 import androidx.compose.ui.unit.dp
 import ui.viewmodel.OciState
 
+/**
+ * Panell de superadministració.
+ *
+ * Gestiona l'alta d'usuaris i permet visualitzar tots els comptes del sistema.
+ */
 @Composable
 fun PantallaSuperAdmin(
     ociState: OciState,

@@ -8,6 +8,14 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import ui.viewmodel.OciState
 
+/**
+ * Formulari d'inici de sessió compartit entre Desktop i Android.
+ *
+ * @param ociState estat actual de la pantalla.
+ * @param onUsuariCanvi callback per actualitzar el camp d'usuari.
+ * @param onContrasenyaCanvi callback per actualitzar el camp de contrasenya.
+ * @param onIniciarSessio callback per intentar autenticar-se.
+ */
 @Composable
 fun PantallaIniciSessio(
     ociState: OciState,

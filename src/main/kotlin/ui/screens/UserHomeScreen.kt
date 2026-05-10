@@ -8,6 +8,11 @@ import androidx.compose.ui.*
 import androidx.compose.ui.unit.dp
 import ui.viewmodel.OciState
 
+/**
+ * Panell de l'usuari normal.
+ *
+ * Mostra el catàleg, la llista personal i permet afegir o moure elements.
+ */
 @Composable
 fun PantallaIniciUsuari(
     ociState: OciState,
