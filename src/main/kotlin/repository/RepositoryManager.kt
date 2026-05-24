@@ -4,18 +4,23 @@ import models.*
 import kotlinx.serialization.serializer
 
 object GestorRepositorio {
-    val repositorioElemento: Repositorio<ElementOci> = RepositorioJson(
-        "src/main/kotlin/jsons/elementos.json",
+    private val apiBase = System.getenv("API_URL") ?: "http://localhost:3000"
+
+    val repositorioElemento: Repositorio<ElementOci> = RepositorioApi(
+        apiBase,
+        "elementos",
         serializer<ElementOci>()
     )
 
-    val repositorioCategoria: Repositorio<Categoria> = RepositorioJson(
-        "src/main/kotlin/jsons/categorias.json",
+    val repositorioCategoria: Repositorio<Categoria> = RepositorioApi(
+        apiBase,
+        "categorias",
         serializer<Categoria>()
     )
 
-    val repositorioUsuario: Repositorio<User> = RepositorioJson(
-        "src/main/kotlin/jsons/usuarios.json",
+    val repositorioUsuario: Repositorio<User> = RepositorioApi(
+        apiBase,
+        "usuarios",
         serializer<User>()
     )
 }

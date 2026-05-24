@@ -1,3 +1,5 @@
+@file:JvmName("DesktopConsoleMain")
+
 /**
  * Helper per executar la consola des de desktop.
  *

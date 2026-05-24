@@ -1,0 +1,25 @@
+services:
+
+  mongodb:
+    image: mongo:7
+    container_name: llistaoci-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-init/init.js:/docker-entrypoint-initdb.d/init.js:ro
+
+  api:
+    build: ./api
+    container_name: llistaoci-api
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - MONGO_URL=mongodb://mongodb:27017
+      - DB_NAME=llistaociDB
+    depends_on:
+      - mongodb
+
+volumes:
+  mongodb_data:

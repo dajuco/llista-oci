@@ -26,6 +26,9 @@ kotlin {
                 implementation(compose.material)
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+                implementation("io.ktor:ktor-client-core:2.3.5")
+                implementation("io.ktor:ktor-client-content-negotiation:2.3.5")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.5")
                 implementation(kotlin("reflect"))
             }
         }
@@ -34,6 +37,7 @@ kotlin {
             kotlin.srcDir("src/androidMain/kotlin")
             dependencies {
                 implementation("androidx.activity:activity-compose:1.9.0")
+                implementation("io.ktor:ktor-client-okhttp:2.3.5")
             }
         }
         val desktopMain by getting {
@@ -41,6 +45,7 @@ kotlin {
             kotlin.srcDir("src/desktopMain/kotlin")
             dependencies {
                 implementation(compose.desktop.currentOs)
+                implementation("io.ktor:ktor-client-cio:2.3.5")
             }
         }
     }
@@ -68,6 +73,6 @@ androidComponents {
 
 compose.desktop {
     application {
-        mainClass = "DesktopMainKt"
+        mainClass = "ui.app.DesktopLauncherKt"
     }
 }
